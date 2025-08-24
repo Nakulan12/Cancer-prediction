@@ -1,5 +1,5 @@
 venv/
-mmodel/
+model/
 __pycache__/
 *.pyc
 
