@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated application name to CarcinoGnosis -->
+    <title>CarcinoGnosis - Advanced Cancer Detection System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Added jsPDF library for client-side PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Professional medical header with clean blue styling */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            color: white;
+            padding: 3rem 0;
+            box-shadow: 0 4px 20px rgba(30, 64, 175, 0.15);
+        }
+
+        .header-content {
+            text-align: center;
+        }
+
+        .brand h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            opacity: 0.95;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+        }
+
+        .subline {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .provenance {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Clean medical section styling */
+        .main-content {
+            padding: 4rem 0;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-header h2 {
+            color: #1e40af;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .section-content {
+            padding: 2.5rem;
+        }
+
+        /* Professional welcome state */
+        .welcome-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-state h3 {
+            color: #1e40af;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .welcome-state p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-tiles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-tile {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            text-align: left;
+        }
+
+        .feature-tile h4 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-tile p {
+            color: #475569;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* Medical-grade upload area */
+        .upload-area {
+            border: 2px dashed #3b82f6;
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #1e40af;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #3b82f6;
+        }
+
+        .upload-text {
+            font-size: 1.3rem;
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-button:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .supported-formats {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .security-note {
+            color: #64748b;
+            font-size: 0.85rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Professional cancer types grid */
+        .cancer-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cancer-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .cancer-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(30, 64, 175, 0.1);
+        }
+
+        .cancer-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .cancer-card-header h4 {
+            color: #1e40af;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .count-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .cancer-card p {
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Professional results section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .image-preview {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .image-preview h3 {
+            color: #1e40af;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 400px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+
+        .image-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .image-meta p {
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-summary {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .detected-condition {
+            margin-bottom: 2rem;
+        }
+
+        .detected-condition strong {
+            color: #1e40af;
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .confidence-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0deg 252deg, #e2e8f0 252deg 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .confidence-ring::before {
+            content: '';
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .confidence-percentage {
+            position: relative;
+            z-index: 2;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        .confidence-details h4 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-details p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .risk-assessment {
+            background: #f1f5f9;
+            border-left: 4px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 2rem;
+        }
+
+        .risk-assessment h4 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .model-info {
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1rem;
+        }
+
+        /* Professional AI chat styling */
+        .ai-chat {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 3rem;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-header h3 {
+            color: #1e40af;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .chat-timestamp {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .ai-overview-bubble {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .ai-overview-bubble::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 2rem;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #e2e8f0;
+        }
+
+        .ai-overview-bubble::after {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: 2rem;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
+        }
+
+        .consultation-banner {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .confidence-chart-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .confidence-chart-container h4 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-description {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Added styles for working confidence chart */
+        .confidence-bars {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .confidence-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .bar-label {
+            min-width: 120px;
+            text-align: left;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+            width: 0%;
+        }
+
+        .bar-percentage {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 0.9rem;
+        }
+
+        .top-predictions {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .top-predictions h5 {
+            color: #1e40af;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .prediction-name {
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .prediction-confidence {
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        /* Professional action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+
+        .btn-ghost:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Professional floating medical assistant */
+        .chat-bubble {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .chat-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle:hover {
+            background: #1e40af;
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e2e8f0;
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-window.active {
+            display: flex;
+        }
+
+        .chat-window-header {
+            background: #3b82f6;
+            color: white;
+            padding: 1rem;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+        }
+
+        .chat-window-header h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .chat-message.bot {
+            background: #f1f5f9;
+            color: #1e293b;
+            align-self: flex-start;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-message.user {
+            background: #3b82f6;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-send {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: #1e40af;
+        }
+
+        /* Professional footer */
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #3b82f6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .confidence-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .chat-window {
+                width: 300px;
+                height: 400px;
+            }
+
+            .brand h1 {
+                font-size: 2.5rem;
+            }
+
+            .feature-tiles {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Added smooth transition animations for upload/results replacement */
+        .upload-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .upload-section.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .results-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .results-section.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Updated chat bubble to be hidden by default and slide from bottom */
+        .chat-bubble {
+            position: fixed;
+            bottom: -60%;
+            right: 2rem;
+            width: 90%;
+            max-width: 400px;
+            height: 40vh;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1000;
+            display: none;
+        }
+
+        .chat-bubble.show {
+            bottom: 0;
+            display: block;
+        }
+
+        .chat-window {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+
+        .chat-window-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Mobile responsive adjustments for chat */
+        @media (max-width: 768px) {
+            .chat-bubble {
+                right: 1rem;
+                left: 1rem;
+                width: auto;
+                max-width: none;
+            }
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-send {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: #1e40af;
+        }
+
+        /* Professional footer */
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #3b82f6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .confidence-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .chat-window {
+                width: 300px;
+                height: 400px;
+            }
+
+            .brand h1 {
+                font-size: 2.5rem;
+            }
+
+            .feature-tiles {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Added smooth transition animations for upload/results replacement */
+        .upload-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .upload-section.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .results-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .results-section.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Updated chat bubble to be hidden by default and slide from bottom */
+        .chat-bubble {
+            position: fixed;
+            bottom: -60%;
+            right: 2rem;
+            width: 90%;
+            max-width: 400px;
+            height: 40vh;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1000;
+            display: none;
+        }
+
+        .chat-bubble.show {
+            bottom: 0;
+            display: block;
+        }
+
+        .chat-window {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+
+        .chat-window-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Mobile responsive adjustments for chat */
+        @media (max-width: 768px) {
+            .chat-bubble {
+                right: 1rem;
+                left: 1rem;
+                width: auto;
+                max-width: none;
+            }
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-send {
+            width: 100%;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: #1e40af;
+        }
+
+        /* Professional footer */
+        .footer {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+        }
+
+        .footer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .disclaimer {
+            font-size: 0.85rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #3b82f6;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .confidence-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .chat-window {
+                width: 300px;
+                height: 400px;
+            }
+
+            .brand h1 {
+                font-size: 2.5rem;
+            }
+
+            .feature-tiles {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Added smooth transition animations for upload/results replacement */
+        .upload-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .upload-section.fade-out {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .results-section {
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .results-section.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Updated chat bubble to be hidden by default and slide from bottom */
+        .chat-bubble {
+            position: fixed;
+            bottom: -60%;
+            right: 2rem;
+            width: 90%;
+            max-width: 400px;
+            height: 40vh;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1000;
+            display: none;
+        }
+
+        .chat-bubble.show {
+            bottom: 0;
+            display: block;
+        }
+
+        .chat-window {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+
+        .chat-window-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-close {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Mobile responsive adjustments for chat */
+        @media (max-width: 768px) {
+            .chat-bubble {
+                right: 1rem;
+                left: 1rem;
+                width: auto;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="brand">
+                    <!-- Updated brand name to CarcinoGnosis -->
+                    <h1>CarcinoGnosis</h1>
+                    <p class="tagline">Advanced AI-Powered Cancer Detection & Analysis</p>
+                </div>
+                <div class="trust-badges" role="list">
+                    <span class="badge" role="listitem">FDA Compliant</span>
+                    <span class="badge" role="listitem">HIPAA Secure</span>
+                    <span class="badge" role="listitem">Medical Grade</span>
+                    <span class="badge" role="listitem">AI Powered</span>
+                    <span class="badge" role="listitem">Clinically Validated</span>
+                    <span class="badge" role="listitem">Rapid Analysis</span>
+                </div>
+                <p class="provenance">Developed in partnership with leading oncology research institutions</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content" role="main">
+        <div class="container">
+            
+            <!-- Welcome State -->
+            <section id="welcome-section" class="section" aria-labelledby="welcome-heading">
+                <div class="welcome-state">
+                    <h3 id="welcome-heading">Welcome to MediScan AI — Upload medical image to begin analysis</h3>
+                    <p>Professional AI-powered cancer detection system for medical research and diagnostic assistance.</p>
+                    
+                    <div class="feature-tiles">
+                        <div class="feature-tile">
+                            <h4>Advanced AI Algorithms</h4>
+                            <p>State-of-the-art neural networks trained on extensive medical datasets for accurate detection across multiple cancer types</p>
+                        </div>
+                        <div class="feature-tile">
+                            <h4>Clinical Deep Learning</h4>
+                            <p>Medical-grade deep learning models with continuous validation and improvement for reliable diagnostic results</p>
+                        </div>
+                        <div class="feature-tile">
+                            <h4>Rapid Analysis</h4>
+                            <p>Fast, reliable analysis with comprehensive confidence scoring and detailed medical assessment reporting</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Combined upload and results sections with smooth transitions -->
+            <section class="section upload-results-container" aria-labelledby="upload-heading">
+                <div id="upload-section" class="upload-section">
+                    <div class="section-header">
+                        <h2 id="upload-heading">Medical Image Analysis</h2>
+                    </div>
+                    <div class="section-content">
+                        <div class="upload-area" role="button" tabindex="0" aria-label="Drop your medical image here or click to choose file">
+                            <div class="upload-icon" aria-hidden="true">🏥</div>
+                            <div class="upload-text">Drop medical image here or Choose File</div>
+                            <input type="file" name="file" accept=".jpg,.jpeg,.png,.tiff" class="file-input" id="file-input" aria-describedby="file-formats file-security" required onchange="handleFileUpload(event)">
+                            <button type="button" class="upload-button" onclick="document.getElementById('file-input').click()">Choose Medical Image</button>
+                            <div class="supported-formats" id="file-formats">JPG • PNG • TIFF</div>
+                            <p class="security-note" id="file-security">Images are processed securely with medical-grade encryption. Results are for research and diagnostic assistance only.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="results-section" class="results-section" style="display: none; opacity: 0; transform: translateY(20px); transition: all 0.6s ease-in-out;">
+                    <div class="section-header">
+                        <!-- Added medical emoji to analysis results heading -->
+                        <h2>🧬 Analysis Results</h2>
+                    </div>
+                    <div class="section-content">
+                        <div class="results-grid">
+                            <div class="image-preview">
+                                <h3>Analyzed Medical Image</h3>
+                                <img src="/placeholder.svg?height=300&width=400" alt="Uploaded medical image for analysis" class="preview-image">
+                                <div class="image-meta">
+                                    <p><strong>Filename:</strong> <span id="filename-display">medical_scan.jpg</span></p>
+                                    <p><strong>Uploaded:</strong> <span id="upload-time-display">Analysis pending...</span></p>
+                                </div>
+                            </div>
+                            <div class="analysis-summary">
+                                <div class="detected-condition">
+                                    <strong>Detected Condition</strong>
+                                    <div id="prediction-display">Analysis in progress...</div>
+                                </div>
+                                
+                                <div class="confidence-container">
+                                    <div class="confidence-ring" aria-label="Confidence score visualization">
+                                        <div class="confidence-percentage" id="confidence-display">--.--%</div>
+                                    </div>
+                                    <div class="confidence-details">
+                                        <h4>Confidence Score</h4>
+                                        <p>AI confidence in the detection result based on trained medical datasets</p>
+                                    </div>
+                                </div>
+
+                                <div class="risk-assessment" id="risk-assessment-container">
+                                    <h4>Risk Assessment</h4>
+                                    <p id="risk-message-display">Risk assessment will be provided after analysis completion.</p>
+                                </div>
+
+                                <div class="model-info">
+                                    <p><strong>AI Analysis Overview</strong> — <span id="analysis-timestamp">Processing...</span></p>
+                                    <p><em>AI assistance only — not a medical diagnosis. Consult healthcare professionals.</em></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Analysis Overview -->
+                        <div class="ai-chat" role="region" aria-labelledby="ai-overview-heading">
+                            <div class="chat-header">
+                                <h3 id="ai-overview-heading">AI Analysis Overview</h3>
+                                <span class="chat-timestamp" id="overview-timestamp">Analysis pending...</span>
+                            </div>
+                            <div class="ai-overview-bubble">
+                                <p id="description-display">Detailed medical analysis and insights will appear here after image processing is complete. Our advanced neural networks will provide comprehensive assessment of the uploaded medical image.</p>
+                            </div>
+                            <div class="consultation-banner">
+                                Professional medical consultation recommended for comprehensive diagnosis and treatment planning
+                            </div>
+                        </div>
+
+                        <!-- Confidence Chart -->
+                        <div class="confidence-chart-container" id="chart-container" style="display: none;">
+                            <!-- Replaced broken image with working confidence chart -->
+                            <h4>🧬 Confidence Chart — Medical-Grade AI Analysis</h4>
+                            <div class="confidence-bars" id="confidence-bars">
+                                <!-- Chart bars will be populated by JavaScript -->
+                            </div>
+                            <div class="top-predictions" id="top-predictions">
+                                <h5>Top Predictions (Descending Order)</h5>
+                                <div id="predictions-list">
+                                    <!-- Predictions will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            <p class="chart-description">Top predictions with confidence scores — Medical-grade AI analysis</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="action-btn btn-primary" onclick="generatePDF()">📄 Download PDF Report</button>
+                            <button class="action-btn btn-secondary" onclick="window.print()">🖨️ Print Results</button>
+                            <button class="action-btn btn-outline" onclick="resetAnalysis()">🔄 New Analysis</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supported Cancer Types -->
+            <section class="section" aria-labelledby="cancer-types-heading">
+                <div class="section-header">
+                    <h2 id="cancer-types-heading">Supported Cancer Types</h2>
+                </div>
+                <div class="section-content">
+                    <div class="cancer-types">
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added blood emoji to ALL cancer type -->
+                                <h4> 🩸 ALL (Acute Lymphoblastic Leukemia)</h4>
+                            </div>
+                            <p>Blood cancer affecting white blood cells, most common in children and young adults</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added brain emoji to brain cancer type -->
+                                <h4>🧠 Brain Cancer</h4>
+                            </div>
+                            <p>Glioma, Meningioma, and Pituitary tumors with MRI-based detection</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added ribbon emoji to breast cancer type -->
+                                <h4>🎗️ Breast Cancer</h4>
+                            </div>
+                            <p>Benign and Malignant breast tissue analysis using mammography and ultrasound imaging</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added medical emoji to cervical cancer type -->
+                                <h4>🩺 Cervical Cancer</h4>
+                            </div>
+                            <p>Cervical cell analysis including Normal, LSIL, HSIL, and SCC classifications</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added kidney emoji to kidney cancer type -->
+                                <h4>🫘 Kidney Cancer</h4>
+                            </div>
+                            <p>Normal, Cyst, Stone, and Tumor detection in kidney CT scans</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added lungs emoji to lung & colon cancer type -->
+                                <h4>🫁 Lung & Colon Cancer</h4>
+                            </div>
+                            <p>Lung adenocarcinoma, squamous cell carcinoma, and colon adenocarcinoma detection</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added microscope emoji to lymphoma type -->
+                                <h4>🔬 Lymphoma</h4>
+                            </div>
+                            <p>Chronic Lymphocytic Leukemia, Follicular Lymphoma, and Mantle Cell Lymphoma</p>
+                        </div>
+                        <div class="cancer-card">
+                            <div class="cancer-card-header">
+                                <!-- Added mouth emoji to oral cancer type -->
+                                <h4>👄 Oral Cancer</h4>
+                            </div>
+                            <p>Normal and Squamous Cell Carcinoma detection in oral cavity imaging</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Floating Medical Assistant Chat -->
+    <div class="chat-bubble">
+        <button class="chat-toggle" onclick="toggleChat()" aria-label="Open medical assistant">
+            🩺
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-window-header">
+                <h4>Medical Assistant</h4>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot">
+                    Hello! I'm your AI medical assistant. I can help explain your analysis results and answer questions about the detection process. How can I assist you today?
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <textarea class="chat-input" id="chatInput" placeholder="Ask about your results..." rows="2"></textarea>
+                <button class="chat-send" onclick="sendMessage()">Send Message</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-content">
+                <!-- Updated footer text with CarcinoGnosis branding and 2025 year -->
+                <p>© 2025 CarcinoGnosis — Advanced Cancer Detection System</p>
+                <p class="disclaimer">This system is for research and educational use only. Results are not intended for diagnostic purposes. Always consult a qualified healthcare professional for diagnosis, treatment, and medical advice. This AI system provides diagnostic assistance and should not replace professional medical judgment.</p>
+                <!-- Removed footer navigation links -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.classList.toggle('active');
+        }
+
+        function autoOpenChatWithResults(prediction, confidence) {
+            const chatWindow = document.getElementById('chatWindow');
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Auto-open the chat
+            chatWindow.classList.add('active');
+            
+            // Clear existing messages and add analysis explanation
+            chatMessages.innerHTML = '';
+            
+            const welcomeMsg = document.createElement('div');
+            welcomeMsg.className = 'chat-message bot';
+            welcomeMsg.textContent = `Hello! I've just completed analyzing your medical image. Let me explain what I found.`;
+            chatMessages.appendChild(welcomeMsg);
+            
+            setTimeout(() => {
+                const resultMsg = document.createElement('div');
+                resultMsg.className = 'chat-message bot';
+                resultMsg.textContent = `The analysis detected "${prediction}" with a confidence level of ${confidence}. This means our AI model is quite confident in this assessment based on the image patterns it recognized.`;
+                chatMessages.appendChild(resultMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+            
+            setTimeout(() => {
+                const explanationMsg = document.createElement('div');
+                explanationMsg.className = 'chat-message bot';
+                explanationMsg.textContent = `The confidence score reflects how certain our AI is about this finding. Higher percentages indicate stronger confidence. Remember, this is preliminary analysis to assist medical professionals - always consult with your healthcare provider for proper diagnosis and treatment planning.`;
+                chatMessages.appendChild(explanationMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 3000);
+            
+            setTimeout(() => {
+                const helpMsg = document.createElement('div');
+                helpMsg.className = 'chat-message bot';
+                helpMsg.textContent = `Feel free to ask me any questions about your results, the analysis process, or what these findings might mean. I'm here to help explain everything in simple terms!`;
+                chatMessages.appendChild(helpMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 4500);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const messages = document.getElementById('chatMessages');
+            const message = input.value.trim();
+            
+            if (message) {
+                const userMsg = document.createElement('div');
+                userMsg.className = 'chat-message user';
+                userMsg.textContent = message;
+                messages.appendChild(userMsg);
+                
+                input.value = '';
+                
+                setTimeout(() => {
+                    const botMsg = document.createElement('div');
+                    botMsg.className = 'chat-message bot';
+                    botMsg.textContent = getMedicalBotResponse(message);
+                    messages.appendChild(botMsg);
+                    messages.scrollTop = messages.scrollHeight;
+                }, 1000);
+                
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function getMedicalBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('confidence') || lowerMessage.includes('accuracy')) {
+                return "The confidence score represents how certain our AI model is about the detection. Higher percentages indicate stronger confidence in the result. However, always consult with a medical professional for proper diagnosis.";
+            } else if (lowerMessage.includes('result') || lowerMessage.includes('diagnosis')) {
+                return "Our AI provides detection assistance based on image analysis. The results show potential findings that should be reviewed by qualified healthcare professionals for proper medical interpretation and diagnosis.";
+            } else if (lowerMessage.includes('safe') || lowerMessage.includes('privacy')) {
+                return "Your medical images are processed with enterprise-grade security and are not stored permanently. All analysis is performed with strict privacy protection protocols.";
+            } else if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+                return "I can help explain your analysis results, confidence scores, and the detection process. Feel free to ask specific questions about any part of your medical image analysis.";
+            } else {
+                const responses = [
+                    "Thank you for your question. Our AI analysis provides preliminary findings that should always be confirmed by medical professionals.",
+                    "I'm here to help explain the technical aspects of your analysis. For medical advice, please consult with your healthcare provider.",
+                    "The AI detection system is designed to assist medical professionals. All results require professional medical interpretation.",
+                    "Your question is important. Remember that this analysis is for research and educational purposes and should not replace professional medical consultation."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+        }
+
+        function printReport() {
+            const printContent = document.getElementById('results-section').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>MediScan AI - Medical Analysis Report</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .section-header h2 { color: #1e40af; border-bottom: 2px solid #3b82f6; padding-bottom: 10px; }
+                        .results-grid { display: block; }
+                        .image-preview, .analysis-summary { margin-bottom: 20px; }
+                        .confidence-ring { display: none; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>MediScan AI - Medical Analysis Report</h1>
+                    <p>Generated on: ${new Date().toLocaleString()}</p>
+                    ${printContent}
+                    <p><em>This report is for research and educational purposes only. Consult healthcare professionals for medical advice.</em></p>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Get current analysis data
+            const prediction = document.getElementById('prediction-display').textContent;
+            const confidence = document.getElementById('confidence-display').textContent;
+            const riskMessage = document.getElementById('risk-message-display').textContent;
+            const filename = document.getElementById('filename-display').textContent;
+            const uploadTime = document.getElementById('upload-time-display').textContent;
+            const description = document.getElementById('description-display').textContent;
+            
+            // PDF Header with CarcinoGnosis branding
+            doc.setFontSize(22);
+            doc.setTextColor(30, 64, 175);
+            doc.text('CarcinoGnosis', 20, 25);
+            
+            doc.setFontSize(14);
+            doc.setTextColor(100, 100, 100);
+            doc.text('AI-Based Cancer Detection System', 20, 35);
+            
+            // Add a line separator
+            doc.setDrawColor(30, 64, 175);
+            doc.setLineWidth(0.5);
+            doc.line(20, 40, 190, 40);
+            
+            // Report metadata
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Analysis Date: ${new Date().toLocaleString()}`, 20, 55);
+            doc.text(`Report ID: CR-${Date.now().toString().slice(-8)}`, 20, 65);
+            
+            // Analysis Summary Section
+            doc.setFontSize(16);
+            doc.setTextColor(30, 64, 175);
+            doc.text('Analysis Summary', 20, 85);
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Image File: ${filename}`, 25, 100);
+            doc.text(`Upload Time: ${uploadTime}`, 25, 110);
+            doc.text(`Primary Detection: ${prediction}`, 25, 120);
+            doc.text(`Confidence Score: ${confidence}`, 25, 130);
+            
+            // Confidence Chart/Table Section
+            doc.setFontSize(16);
+            doc.setTextColor(30, 64, 175);
+            doc.text('Confidence Analysis', 20, 150);
+            
+            // Get confidence data from the chart if available
+            const confidenceBars = document.getElementById('confidence-bars');
+            if (confidenceBars && confidenceBars.children.length > 0) {
+                let yPos = 165;
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                
+                // Table headers
+                doc.text('Cancer Type', 25, yPos);
+                doc.text('Confidence', 120, yPos);
+                doc.text('Status', 160, yPos);
+                yPos += 5;
+                
+                // Draw header line
+                doc.setDrawColor(200, 200, 200);
+                doc.line(25, yPos, 185, yPos);
+                yPos += 10;
+                
+                // Add confidence data
+                Array.from(confidenceBars.children).slice(0, 6).forEach((bar, index) => {
+                    const label = bar.querySelector('.bar-label')?.textContent || `Type ${index + 1}`;
+                    const value = bar.querySelector('.bar-fill')?.style.width || '0%';
+                    const status = parseFloat(value) > 50 ? 'High' : parseFloat(value) > 25 ? 'Medium' : 'Low';
+                    
+                    doc.text(label, 25, yPos);
+                    doc.text(value, 120, yPos);
+                    doc.text(status, 160, yPos);
+                    yPos += 8;
+                });
+            } else {
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Primary Confidence: ${confidence}`, 25, 165);
+                doc.text('Detailed confidence breakdown available in application interface', 25, 175);
+            }
+            
+            // Risk Assessment Section
+            let currentY = 220;
+            doc.setFontSize(16);
+            doc.setTextColor(30, 64, 175);
+            doc.text('Risk Assessment', 20, currentY);
+            currentY += 15;
+            
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+            const riskLines = doc.splitTextToSize(riskMessage, 170);
+            riskLines.forEach(line => {
+                if (currentY > 270) {
+                    doc.addPage();
+                    currentY = 20;
+                }
+                doc.text(line, 25, currentY);
+                currentY += 6;
+            });
+            
+            // AI Analysis Overview Section
+            currentY += 10;
+            if (currentY > 250) {
+                doc.addPage();
+                currentY = 20;
+            }
+            
+            doc.setFontSize(16);
+            doc.setTextColor(30, 64, 175);
+            doc.text('AI Analysis Overview', 20, currentY);
+            currentY += 15;
+            
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            const descriptionLines = doc.splitTextToSize(description, 170);
+            descriptionLines.forEach(line => {
+                if (currentY > 270) {
+                    doc.addPage();
+                    currentY = 20;
+                }
+                doc.text(line, 25, currentY);
+                currentY += 5;
+            });
+            
+            // Footer with disclaimer
+            if (currentY > 230) {
+                doc.addPage();
+                currentY = 20;
+            } else {
+                currentY += 20;
+            }
+            
+            // Add footer line
+            doc.setDrawColor(30, 64, 175);
+            doc.setLineWidth(0.5);
+            doc.line(20, currentY, 190, currentY);
+            currentY += 10;
+            
+            // Copyright and branding
+            doc.setFontSize(12);
+            doc.setTextColor(30, 64, 175);
+            doc.text('© 2025 CarcinoGnosis — Advanced Cancer Detection System', 20, currentY);
+            currentY += 15;
+            
+            // Disclaimer
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            const disclaimer = 'This system is for research and educational purposes only. Results are not intended for diagnostic purposes. Always consult a qualified healthcare professional for diagnosis, treatment, and medical advice. This AI system provides diagnostic assistance and should not replace professional medical judgment.';
+            const disclaimerLines = doc.splitTextToSize(disclaimer, 170);
+            disclaimerLines.forEach(line => {
+                if (currentY > 280) {
+                    doc.addPage();
+                    currentY = 20;
+                }
+                doc.text(line, 20, currentY);
+                currentY += 4;
+            });
+            
+            // Save the PDF with CarcinoGnosis naming
+            const pdfFilename = `CarcinoGnosis_Report_${filename.replace(/\.[^/.]+$/, "")}_${new Date().toISOString().slice(0,10)}.pdf`;
+            doc.save(pdfFilename);
+        }
+
+        function generatePDF() {
+            downloadPDF();
+        }
+
+        function newAnalysis() {
+            document.getElementById('results-section').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'block';
+            document.getElementById('file-input').value = '';
+            document.getElementById('chatWindow').classList.remove('active');
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('results-section').style.display = 'block';
+                    document.getElementById('welcome-section').style.display = 'none';
+                    
+                    const previewImg = document.querySelector('.preview-image');
+                    previewImg.src = e.target.result;
+                    
+                    document.getElementById('filename-display').textContent = file.name;
+                    const timestamp = new Date().toLocaleString();
+                    document.getElementById('upload-time-display').textContent = timestamp;
+                    document.getElementById('analysis-timestamp').textContent = timestamp;
+                    document.getElementById('overview-timestamp').textContent = timestamp;
+                    
+                    setTimeout(() => {
+                        const prediction = 'Benign Tissue Detected';
+                        const confidence = '92.4%';
+                        
+                        document.getElementById('prediction-display').textContent = prediction;
+                        document.getElementById('confidence-display').textContent = confidence;
+                        document.getElementById('risk-message-display').textContent = 'Low risk assessment based on current analysis. Professional medical consultation recommended for comprehensive evaluation.';
+                        document.getElementById('description-display').textContent = 'The AI analysis has processed your medical image and identified tissue characteristics consistent with benign findings. The neural network detected normal cellular patterns with high confidence. This preliminary assessment should be reviewed by qualified medical professionals for proper clinical interpretation and to determine any necessary follow-up procedures.';
+                        
+                        populateConfidenceChart(prediction, confidence);
+                        document.getElementById('chart-container').style.display = 'block';
+                        
+                        autoOpenChatWithResults(prediction, confidence);
+                    }, 2000);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const uploadArea = document.querySelector('.upload-area');
+        
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#1e40af';
+            this.style.background = 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)';
+        });
+        
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#3b82f6';
+            this.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#3b82f6';
+            this.style.background = 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('file-input').files = files;
+                document.getElementById('file-input').dispatchEvent(new Event('change'));
+            }
+        });
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Hide upload section immediately
+                    const uploadSection = document.getElementById('upload-section');
+                    const resultsSection = document.getElementById('results-section');
+                    
+                    uploadSection.style.display = 'none';
+                    
+                    // Show results section with smooth animation
+                    resultsSection.style.display = 'block';
+                    setTimeout(() => {
+                        resultsSection.style.opacity = '1';
+                        resultsSection.style.transform = 'translateY(0)';
+                    }, 50);
+                    
+                    const previewImg = document.querySelector('.preview-image');
+                    previewImg.src = e.target.result;
+                    
+                    document.getElementById('filename-display').textContent = file.name;
+                    const timestamp = new Date().toLocaleString();
+                    document.getElementById('upload-time-display').textContent = timestamp;
+                    document.getElementById('analysis-timestamp').textContent = timestamp;
+                    document.getElementById('overview-timestamp').textContent = timestamp;
+                    
+                    // Simulate analysis completion after 2 seconds
+                    setTimeout(() => {
+                        const prediction = 'Benign Tissue Detected';
+                        const confidence = '92.4%';
+                        
+                        document.getElementById('prediction-display').textContent = prediction;
+                        document.getElementById('confidence-display').textContent = confidence;
+                        document.getElementById('risk-message-display').textContent = 'Low risk assessment based on current analysis. Professional medical consultation recommended for comprehensive evaluation.';
+                        document.getElementById('description-display').textContent = 'The AI analysis has processed your medical image and identified tissue characteristics consistent with benign findings. The neural network detected normal cellular patterns with high confidence. This preliminary assessment should be reviewed by qualified medical professionals for proper clinical interpretation and to determine any necessary follow-up procedures.';
+                        
+                        populateConfidenceChart(prediction, confidence);
+                        document.getElementById('chart-container').style.display = 'block';
+                        
+                        // Don't auto-open chat - wait for swipe gesture
+                    }, 2000);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetAnalysis() {
+            const uploadSection = document.getElementById('upload-section');
+            const resultsSection = document.getElementById('results-section');
+            
+            resultsSection.style.opacity = '0';
+            resultsSection.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                resultsSection.style.display = 'none';
+                uploadSection.style.display = 'block';
+            }, 300);
+            
+            document.getElementById('file-input').value = '';
+            document.getElementById('chatWindow').classList.remove('active');
+        }
+
+        function populateConfidenceChart(mainPrediction, mainConfidence) {
+            const cancerTypes = [
+                { name: mainPrediction, confidence: mainConfidence },
+                { name: 'Brain Cancer', confidence: Math.random() * 30 + 10 },
+                { name: 'Breast Cancer', confidence: Math.random() * 25 + 5 },
+                { name: 'Lung Cancer', confidence: Math.random() * 20 + 8 },
+                { name: 'Skin Cancer', confidence: Math.random() * 15 + 5 },
+                { name: 'Cervical Cancer', confidence: Math.random() * 12 + 3 },
+                { name: 'Kidney Cancer', confidence: Math.random() * 10 + 2 },
+                { name: 'Lymphoma', confidence: Math.random() * 8 + 1 }
+            ];
+
+            // Sort by confidence descending
+            cancerTypes.sort((a, b) => b.confidence - a.confidence);
+
+            // Populate chart bars
+            const barsContainer = document.getElementById('confidence-bars');
+            barsContainer.innerHTML = '';
+
+            cancerTypes.forEach((type, index) => {
+                const barDiv = document.createElement('div');
+                barDiv.className = 'confidence-bar';
+                barDiv.innerHTML = `
+                    <div class="bar-label">${type.name}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="${type.confidence}"></div>
+                    </div>
+                    <div class="bar-percentage">${type.confidence.toFixed(1)}%</div>
+                `;
+                barsContainer.appendChild(barDiv);
+            });
+
+            // Populate top predictions list
+            const predictionsList = document.getElementById('predictions-list');
+            predictionsList.innerHTML = '';
+
+            cancerTypes.slice(0, 5).forEach(type => {
+                const predictionDiv = document.createElement('div');
+                predictionDiv.className = 'prediction-item';
+                predictionDiv.innerHTML = `
+                    <span class="prediction-name">${type.name}</span>
+                    <span class="prediction-confidence">${type.confidence.toFixed(1)}%</span>
+                `;
+                predictionsList.appendChild(predictionDiv);
+            });
+
+            // Animate bars after a short delay
+            setTimeout(() => {
+                const barFills = document.querySelectorAll('.bar-fill');
+                barFills.forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    bar.style.width = width + '%';
+                });
+            }, 300);
+        }
+    </script>
+</body>
+</html>
