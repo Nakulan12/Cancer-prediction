@@ -2,4 +2,3 @@ venv/
 model/
 __pycache__/
 *.pyc
-
