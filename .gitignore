@@ -1,4 +1,5 @@
-venv/
-model/
-__pycache__/
-*.pyc
+venv/ 
+mmodel/ 
+model/ 
+__pycache__/ 
+*.pyc 
